@@ -10,7 +10,6 @@
 
     function handleMessage(event) {
         if (event.detail.isDone) {
-            console.log('step done')
             step = 1;
         }
     }

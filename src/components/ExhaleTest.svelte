@@ -1,6 +1,9 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-
+    const SIX_SECONDS = 6000;
+    const ONE_HUNDRED_TWENTY_SECONDS = 120000;
+    const MIN_BREATH = SIX_SECONDS;
+    const MAX_BREATH = ONE_HUNDRED_TWENTY_SECONDS;
     const dispatch = createEventDispatcher();
     let start = null;
 
@@ -12,17 +15,15 @@
 
     function startTimer() {
         start = Date.now();
-        console.time('exhale');
     }
 
     function stopTimer() {
-        const difference = Date.now() - start;
-        if (difference < 1000 || difference > 120000) {
+        const exhale = Date.now() - start;
+        if (exhale < MIN_BREATH || exhale > MAX_BREATH) {
             start = null;
-            console.log(`Invalid difference:${difference}.`);
             return;
         }
-        onTimeCalculated(Date.now() - start);
+        onTimeCalculated(exhale);
     }
 </script>
 
