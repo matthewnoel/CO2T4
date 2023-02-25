@@ -24,9 +24,9 @@
         <legend>Terms of Use</legend>
         <div>
             <input type="checkbox" name="Test" id="abc" bind:checked={accepted}>
-            <label for="abc">I acknowlege this tool made by a random person on the internet is offered with no warranty and by continuing I accept full responsibility for my actions.</label>
+            <label for="abc">I acknowledge this tool made by a random person on the internet is offered with no warranty and by continuing I accept full responsibility for my actions.</label>
         </div>
-        <input type="button" value="Acknowlege and Continue" on:click={confirmWarning} disabled={!accepted}>
+        <input type="button" value="Acknowledge and Continue" on:click={confirmWarning} disabled={!accepted}>
     </fieldset>
 </div>
 
