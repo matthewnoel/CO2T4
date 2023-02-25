@@ -1,3 +1,1 @@
-# Carbon Dioxide Tolerance Testing &amp; Training Tool
-
-AKA $\ce{CO2T4}$
+# Carbon Dioxide Tolerance Testing &amp; Training Tool ($\ce{CO2T4}$)
