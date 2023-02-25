@@ -2,7 +2,7 @@
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
-    $: start = null;
+    let start = null;
 
     function onTimeCalculated(milliseconds) {
         dispatch('message', {
@@ -16,9 +16,17 @@
     }
 
     function stopTimer() {
+        const difference = Date.now() - start;
+        if (difference < 1000 || difference > 120000) {
+            start = null;
+            console.log(`Invalid difference:${difference}.`);
+            return;
+        }
         onTimeCalculated(Date.now() - start);
     }
 </script>
 
-<p>Breath in fully then start the timer</p>
-<input type="button" value={(start == null) ? 'Start' : 'Stop'} on:click={(start == null) ? startTimer : stopTimer}>
+<div>
+    <p>Breath in fully then start the timer</p>
+    <input type="button" value={(start == null) ? 'Start' : 'Stop'} on:click={(start == null) ? startTimer : stopTimer}>
+</div>

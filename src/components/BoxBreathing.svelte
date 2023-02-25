@@ -2,4 +2,6 @@
     export let seconds;
 </script>
 
-<p>Box animation {seconds} each</p>
+<div>
+    <p>Box animation {seconds} each</p>
+</div>

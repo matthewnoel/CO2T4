@@ -4,7 +4,7 @@
     import TimeConversion from "./TimeConversion.svelte";
     import BoxBreathing from "./BoxBreathing.svelte";
 
-    $: step = 0;
+    let step = 0;
     let milliseconds;
     let seconds;
 

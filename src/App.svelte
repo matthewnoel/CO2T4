@@ -2,7 +2,7 @@
     import Warning from "./components/Warning.svelte";
     import FlowManager from "./components/FlowManager.svelte";
 
-    $: isWarningAcknowledged = false;
+    let isWarningAcknowledged = false;
 
     function handleMessage(event) {
         isWarningAcknowledged = Boolean(event.detail.response);
@@ -19,6 +19,10 @@
 
 <style>
     main {
-        background-color: tan;
+        height: 100vh;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 </style>

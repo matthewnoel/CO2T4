@@ -9,5 +9,7 @@
         });
     }
 </script>
-<h1>Warning</h1>
-<input type="button" value="Ack" on:click={confirmWarning}>
+<div>
+    <h1>Warning</h1>
+    <input type="button" value="Ack" on:click={confirmWarning}>
+</div>
