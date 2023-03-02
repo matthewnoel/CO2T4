@@ -31,3 +31,15 @@
     <p>Breath in fully then start the timer</p>
     <input type="button" value={(start == null) ? 'Start' : 'Stop'} on:click={(start == null) ? startTimer : stopTimer}>
 </div>
+
+<style>
+    div {
+        padding: 2em;
+        font-size: 2rem;
+    }
+    input {
+        padding: 2em;
+        width: 100%;
+        font-size: 2rem;
+    }
+</style>

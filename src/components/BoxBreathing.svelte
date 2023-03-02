@@ -29,3 +29,9 @@
         <p>{text}</p>
     {/if}
 </div>
+
+<style>
+    p {
+        font-size: 2rem;
+    }
+</style>
