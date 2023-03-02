@@ -11,3 +11,9 @@
 </script>
 
 <p>Breath normally</p>
+
+<style>
+    p {
+        font-size: 2rem;
+    }
+</style>
