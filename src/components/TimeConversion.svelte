@@ -31,12 +31,19 @@
 </script>
 
 <div id="outer">
-    <p>{seconds} Second Box Breathing Interval</p>
-    <div>
-        <input type="button" value="-" on:click={onMinus} disabled={seconds - 1 < MIN_BREATH}>
-        <input type="button" value="+" on:click={onPlus} disabled={seconds + 1 > MAX_BREATH}>
+    <div class="number">
+        <div>
+            <input class="symbol" type="button" value="-" on:click={onMinus} disabled={seconds - 1 < MIN_BREATH}>
+        </div>
+        <div>
+            <h1>{seconds}</h1>
+        </div>
+        <div>
+            <input class="symbol" type="button" value="+" on:click={onPlus} disabled={seconds + 1 > MAX_BREATH}>
+        </div>
     </div>
-    <input id="ok" type="button" value="Ok" on:click={onTimeFinal}>
+    <p>Second Box Breathing Interval</p>
+    <input id="ok" type="button" value="Start" on:click={onTimeFinal}>
 </div>
 
 <style>
@@ -48,12 +55,31 @@
         width: 100%;
     }
 
-    p {
-        font-size: 2rem;
+    h1 {
+        font-size: 8rem;
+        padding: 0 0.25em;
     }
 
     input {
-        padding: 2em;
-        font-size: 2rem;
+        padding: 2em 1em;
+    }
+
+    p {
+        margin: 1.5em 0 2em 0;
+    }
+
+    .number {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .symbol {
+        padding: 0;
+        border-radius: 50%;
+        width: 3em;
+        height: 3em;
     }
 </style>
