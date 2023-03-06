@@ -37,7 +37,6 @@
         padding: 2em;
     }
     input {
-        padding: 2em;
         width: 100%;
     }
 </style>

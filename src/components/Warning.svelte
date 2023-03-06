@@ -29,6 +29,15 @@
 </div>
 
 <style>
+    div {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: 1rem;
+    }
+
+    input {
+        font-size: 1rem;
+    }
+
     fieldset {
         width: fit-content;
         margin: auto;

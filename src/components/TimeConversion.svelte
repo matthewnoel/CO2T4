@@ -30,7 +30,7 @@
     }
 </script>
 
-<div id="outer">
+<div>
     <div class="number">
         <div>
             <input class="symbol" type="button" value="-" on:click={onMinus} disabled={seconds - 1 < MIN_BREATH}>
@@ -43,25 +43,13 @@
         </div>
     </div>
     <p>Second Box Breathing Interval</p>
-    <input id="ok" type="button" value="Start" on:click={onTimeFinal}>
+    <input type="button" value="Start" on:click={onTimeFinal}>
 </div>
 
 <style>
-    #outer {
-        padding: 5em;
-    }
-
-    #ok {
-        width: 100%;
-    }
-
     h1 {
         font-size: 8rem;
         padding: 0 0.25em;
-    }
-
-    input {
-        padding: 2em 1em;
     }
 
     p {

@@ -16,6 +16,7 @@ input {
 	border: 5px solid black;
 	border-radius: 1em;
 	font-size: 3rem;
+	padding: 0.5em;
 }
 
 input:active {
