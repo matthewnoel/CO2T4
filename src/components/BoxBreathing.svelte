@@ -4,7 +4,7 @@
     let isDone = false;
     let elapsed = 0;
     let index = 0;
-    const steps = ['Breath in', 'Hold', 'Breath out', 'Hold'];
+    const steps = [['Breath in', '👃'], ['Hold', '😶'], ['Breath out', '😮‍💨'], ['Hold', '😶']];
     $: text = steps[index];
     const TWO_MINUTES = 120;
     const interval = setInterval(() => {
@@ -26,6 +26,7 @@
     {#if isDone}
         <p>Great job</p>
     {:else}
-        <p>{text}</p>
+        <p>{text[0]}</p>
+        <h1>{text[1]}</h1>
     {/if}
 </div>
