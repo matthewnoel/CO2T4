@@ -28,7 +28,13 @@
 </script>
 
 <div>
-    <p>Breath in completely through your nose then start the timer</p>
+    {#if start == null}
+        <p>Breath in completely through your nose.</p>
+        <p>Then start the timer and exhale as slowly as you can.</p>
+    {:else}
+        <p>Click "Stop" when you run out of air.</p>
+        <p>Do not hold your breath.</p>
+    {/if}
     <input type="button" value={(start == null) ? 'Start' : 'Stop'} on:click={(start == null) ? startTimer : stopTimer}>
 </div>
 

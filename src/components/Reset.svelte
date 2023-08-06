@@ -1,16 +1,17 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    const FOUR_SECONDS = 4000;
+    const EIGHT_SECONDS = 8000;
     const dispatch = createEventDispatcher();
     const interval = setInterval(() => {
         clearInterval(interval);
         dispatch('message', {
             isDone: true,
         });
-    }, FOUR_SECONDS);
+    }, EIGHT_SECONDS);
 </script>
 
-<p>Breath normally</p>
+<p>Breath normally for now.</p>
+<p>Ideally through the nose.</p>
 
 <style>
     p {
