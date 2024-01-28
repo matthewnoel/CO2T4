@@ -27,7 +27,8 @@ input {
 input {
 	background-color: transparent;
 	border: 5px solid black;
-	border-radius: 1em;
+	border-radius: 0.75em;
+	border-style: solid;
 	font-size: 3rem;
 	padding: 0.5em;
 }
