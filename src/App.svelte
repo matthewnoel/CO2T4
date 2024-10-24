@@ -3,7 +3,7 @@
     import FlowManager from "./components/FlowManager.svelte";
     import ThemeToggle from "./components/ThemeToggle.svelte";
 
-    let isWarningAcknowledged = false;
+    let isWarningAcknowledged = $state(false);
 
     function handleMessage(event) {
         isWarningAcknowledged = Boolean(event.detail.response);

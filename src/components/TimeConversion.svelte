@@ -1,8 +1,8 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    export let milliseconds;
+    let { milliseconds } = $props();
 
-    let seconds = Math.round(milliseconds / 6000);
+    let seconds = $state(Math.round(milliseconds / 6000));
     const ONE_SECOND = 1;
     const TWENTY_SECONDS = 20;
     const MIN_BREATH = ONE_SECOND;
@@ -33,17 +33,17 @@
 <div>
     <div class="number">
         <div>
-            <input class="symbol" type="button" value="-" on:click={onMinus} disabled={seconds - 1 < MIN_BREATH}>
+            <input class="symbol" type="button" value="-" onclick={onMinus} disabled={seconds - 1 < MIN_BREATH}>
         </div>
         <div>
             <h1>{seconds}</h1>
         </div>
         <div>
-            <input class="symbol" type="button" value="+" on:click={onPlus} disabled={seconds + 1 > MAX_BREATH}>
+            <input class="symbol" type="button" value="+" onclick={onPlus} disabled={seconds + 1 > MAX_BREATH}>
         </div>
     </div>
     <p>Second Box Breathing Interval</p>
-    <input type="button" value="Start" on:click={onTimeFinal}>
+    <input type="button" value="Start" onclick={onTimeFinal}>
 </div>
 
 <style>

@@ -5,7 +5,7 @@
     const MIN_BREATH = SIX_SECONDS;
     const MAX_BREATH = ONE_HUNDRED_TWENTY_SECONDS;
     const dispatch = createEventDispatcher();
-    let start = null;
+    let start = $state(null);
 
     function onTimeCalculated(milliseconds) {
         dispatch('message', {
@@ -35,7 +35,7 @@
         <p>Click "Stop" when you run out of air.</p>
         <p>Do not hold your breath.</p>
     {/if}
-    <input type="button" value={(start == null) ? 'Start' : 'Stop'} on:click={(start == null) ? startTimer : stopTimer}>
+    <input type="button" value={(start == null) ? 'Start' : 'Stop'} onclick={(start == null) ? startTimer : stopTimer}>
 </div>
 
 <style>

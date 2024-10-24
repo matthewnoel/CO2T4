@@ -1,11 +1,11 @@
 <script>
-    export let seconds;
+    let { seconds } = $props();
 
-    let isDone = false;
+    let isDone = $state(false);
     let elapsed = 0;
-    let index = 0;
+    let index = $state(0);
     const steps = [['Breath in', '👃'], ['Hold', '😶'], ['Breath out', '😮‍💨'], ['Hold', '😶']];
-    $: text = steps[index];
+    let text = $derived(steps[index]);
     const TWO_MINUTES = 120;
     const interval = setInterval(() => {
         elapsed += seconds;
