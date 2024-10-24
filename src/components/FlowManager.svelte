@@ -4,9 +4,9 @@
     import TimeConversion from "./TimeConversion.svelte";
     import BoxBreathing from "./BoxBreathing.svelte";
 
-    let step = 0;
-    let milliseconds;
-    let seconds;
+    let step = $state(0);
+    let milliseconds = $state();
+    let seconds = $state();
 
     function handleMessage(event, nextStep) {
         if (event.detail.isDone) {
