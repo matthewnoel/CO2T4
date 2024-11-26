@@ -1,4 +1,4 @@
-name: Build
+name: Generate License File
 
 on: push
 
@@ -21,6 +21,6 @@ jobs:
     - name: Add & Commit
       uses: EndBug/add-and-commit@v9.1.1
       with:
-        author_name: Build Bot
+        author_name: License Bot
         author_email: donot@reply.com
         message: 'npm run licenses'
