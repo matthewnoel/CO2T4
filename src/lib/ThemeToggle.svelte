@@ -1,14 +1,17 @@
 <script>
+    // @ts-ignore
     const getTheme = ({ localStorageTheme, systemSettingDark }) => {
         if (localStorageTheme !== null) return localStorageTheme;
         if (systemSettingDark.matches) return dark;
         return light;
     };
+    // @ts-ignore
     const update = (theme) => {
         value = theme === dark ? "🌞" : "🌚";
-        document.querySelector("html").setAttribute("data-theme", theme);
+        document.querySelector("html")?.setAttribute("data-theme", theme);
     };
     const handleClick = () => {
+        // @ts-ignore
         const newTheme = currentThemeSetting === dark ? light : dark;
         localStorage.setItem("theme", newTheme);
         update(newTheme);
@@ -16,14 +19,20 @@
     };
     const light = "light";
     const dark = "dark";
-    const localStorageTheme = localStorage.getItem("theme");
-    const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
-    let currentThemeSetting = getTheme({
-        localStorageTheme,
-        systemSettingDark,
-    });
+    let localStorageTheme;
+    let systemSettingDark;
+    // @ts-ignore
+    let currentThemeSetting;
     let value = $state("🌞");
-    update(currentThemeSetting);
+    export function onMount() {
+        localStorageTheme = localStorage.getItem("theme");
+        systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
+        currentThemeSetting = getTheme({
+            localStorageTheme,
+            systemSettingDark,
+        });
+        update(currentThemeSetting);
+    }
 </script>
 
 <input

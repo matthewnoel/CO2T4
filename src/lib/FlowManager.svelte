@@ -1,24 +1,27 @@
 <script>
-    import Reset from "./Reset.svelte";
-    import ExhaleTest from "./ExhaleTest.svelte";
-    import TimeConversion from "./TimeConversion.svelte";
-    import BoxBreathing from "./BoxBreathing.svelte";
+    import Reset from "$lib/Reset.svelte";
+    import ExhaleTest from "$lib/ExhaleTest.svelte";
+    import TimeConversion from "$lib/TimeConversion.svelte";
+    import BoxBreathing from "$lib/BoxBreathing.svelte";
 
     let step = $state(0);
     let milliseconds = $state();
     let seconds = $state();
 
+    // @ts-ignore
     function handleMessage(event, nextStep) {
         if (event.detail.isDone) {
             step = nextStep;
         }
     }
 
+    // @ts-ignore
     function handleExhaleMessage(event) {
         milliseconds = event.detail.milliseconds;
         step = 2
     }
 
+    // @ts-ignore
     function handleConversionMessage(event) {
         seconds = event.detail.seconds;
         step = 4;

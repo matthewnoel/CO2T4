@@ -1,10 +1,11 @@
 <script>
-    import Warning from "./components/Warning.svelte";
-    import FlowManager from "./components/FlowManager.svelte";
-    import ThemeToggle from "./components/ThemeToggle.svelte";
+    import Warning from "$lib/Warning.svelte";
+    import FlowManager from "$lib/FlowManager.svelte";
+    import ThemeToggle from "$lib/ThemeToggle.svelte";
 
     let isWarningAcknowledged = $state(false);
 
+    // @ts-ignore
     function handleMessage(event) {
         isWarningAcknowledged = Boolean(event.detail.response);
     }
