@@ -4,12 +4,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap');
 
-[data-theme="light"] {
+[data-theme='light'] {
 	--color-bg: #ffffff;
 	--color-fg: #000000;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
 	--color-bg: #000000;
 	--color-fg: #ffffff;
 }
