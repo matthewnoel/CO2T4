@@ -8,20 +8,20 @@
     let milliseconds = $state();
     let seconds = $state();
 
-    // @ts-ignore
+    // @ts-expect-error because of laziness
     function handleMessage(event, nextStep) {
         if (event.detail.isDone) {
             step = nextStep;
         }
     }
 
-    // @ts-ignore
+    // @ts-expect-error because of laziness
     function handleExhaleMessage(event) {
         milliseconds = event.detail.milliseconds;
         step = 2
     }
 
-    // @ts-ignore
+    // @ts-expect-error because of laziness
     function handleConversionMessage(event) {
         seconds = event.detail.seconds;
         step = 4;

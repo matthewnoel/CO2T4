@@ -7,7 +7,7 @@
     const dispatch = createEventDispatcher();
     let start = $state(null);
 
-    // @ts-ignore
+    // @ts-expect-error because of laziness
     function onTimeCalculated(milliseconds) {
         dispatch('message', {
             milliseconds,
@@ -15,7 +15,7 @@
     }
 
     function startTimer() {
-        // @ts-ignore
+        // @ts-expect-error because of laziness
         start = Date.now();
     }
 

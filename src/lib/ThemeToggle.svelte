@@ -1,17 +1,17 @@
 <script>
-    // @ts-ignore
+    // @ts-expect-error because of laziness
     const getTheme = ({ localStorageTheme, systemSettingDark }) => {
         if (localStorageTheme !== null) return localStorageTheme;
         if (systemSettingDark.matches) return dark;
         return light;
     };
-    // @ts-ignore
+    // @ts-expect-error because of laziness
     const update = (theme) => {
         value = theme === dark ? "🌞" : "🌚";
         document.querySelector("html")?.setAttribute("data-theme", theme);
     };
     const handleClick = () => {
-        // @ts-ignore
+        // @ts-expect-error because of laziness
         const newTheme = currentThemeSetting === dark ? light : dark;
         localStorage.setItem("theme", newTheme);
         update(newTheme);
@@ -21,7 +21,7 @@
     const dark = "dark";
     let localStorageTheme;
     let systemSettingDark;
-    // @ts-ignore
+    // @ts-expect-error because of laziness
     let currentThemeSetting;
     let value = $state("🌞");
     export function onMount() {
