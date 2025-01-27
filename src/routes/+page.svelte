@@ -5,7 +5,7 @@
 
     let isWarningAcknowledged = $state(false);
 
-    // @ts-ignore
+    // @ts-expect-error because of laziness
     function handleMessage(event) {
         isWarningAcknowledged = Boolean(event.detail.response);
     }
