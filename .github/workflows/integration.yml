@@ -25,6 +25,8 @@ jobs:
         run: npm ci
       - name: 📝 Format project
         run: npm run format
+      - name: 🧑‍⚖️ Generate License File
+        run: npm run licenses
       - name: 💾 Add and commit changes
         uses: EndBug/add-and-commit@v9.1.4
       - name: 🔍 Lint project
