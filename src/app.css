@@ -1,66 +1,66 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-@import url("https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap');
 
-[data-theme="light"] {
-  --color-bg: #ffffff;
-  --color-fg: #000000;
+[data-theme='light'] {
+	--color-bg: #ffffff;
+	--color-fg: #000000;
 }
 
-[data-theme="dark"] {
-  --color-bg: #000000;
-  --color-fg: #ffffff;
+[data-theme='dark'] {
+	--color-bg: #000000;
+	--color-fg: #ffffff;
 }
 
 * {
-  margin: 0;
+	margin: 0;
 }
 
 body,
 input {
-  background-color: white;
-  color: black;
-  font-family: "Tilt Warp", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 2rem;
-  background-color: var(--color-bg);
-  color: var(--color-fg);
+	background-color: white;
+	color: black;
+	font-family: 'Tilt Warp', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: 2rem;
+	background-color: var(--color-bg);
+	color: var(--color-fg);
 }
 
 input {
-  background-color: transparent;
-  border: 5px solid black;
-  border-radius: 0.75em;
-  border-style: solid;
-  font-size: 3rem;
-  padding: 0.5em;
+	background-color: transparent;
+	border: 5px solid black;
+	border-radius: 0.75em;
+	border-style: solid;
+	font-size: 3rem;
+	padding: 0.5em;
 }
 
 input:active {
-  background-color: black;
-  color: white;
+	background-color: black;
+	color: white;
 }
 
 input:focus,
 input:hover {
-  cursor: pointer;
-  border-style: dashed;
+	cursor: pointer;
+	border-style: dashed;
 }
 
 input:disabled {
-  border-style: solid;
-  border-color: lightgray;
-  background-color: whitesmoke;
-  color: lightgray;
+	border-style: solid;
+	border-color: lightgray;
+	background-color: whitesmoke;
+	color: lightgray;
 }
 
 @media (max-width: 800px) {
-  body {
-    font-size: 1.5rem;
-  }
+	body {
+		font-size: 1.5rem;
+	}
 
-  input {
-    font-size: 2rem;
-  }
+	input {
+		font-size: 2rem;
+	}
 }

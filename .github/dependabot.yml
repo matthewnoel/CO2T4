@@ -5,16 +5,16 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'npm'
+    directory: '/' # Location of package manifests
     groups:
       all-updates:
         patterns:
-          - "*"
+          - '*'
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: 'weekly'
+      day: 'sunday'
     reviewers:
-      - "matthewnoel"
+      - 'matthewnoel'
     labels:
-      - "npm dependencies"
+      - 'npm dependencies'

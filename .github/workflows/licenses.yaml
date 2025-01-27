@@ -3,8 +3,8 @@ name: Generate License File
 on:
   push:
     branches:
-      - "**"
-      - "!main"
+      - '**'
+      - '!main'
 
 jobs:
   build:
@@ -18,8 +18,8 @@ jobs:
       - name: 🏃 Run actions/setup-node@v4
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
-          cache: "npm"
+          node-version-file: '.nvmrc'
+          cache: 'npm'
       - run: npm ci
       - run: npm run licenses
       - name: Add & Commit
@@ -27,4 +27,4 @@ jobs:
         with:
           author_name: License Bot
           author_email: donot@reply.com
-          message: "npm run licenses"
+          message: 'npm run licenses'
