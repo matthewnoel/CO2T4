@@ -2,15 +2,12 @@
 	import { createEventDispatcher } from 'svelte';
 	let { milliseconds } = $props();
 
-	let seconds = $state(0);
+	let seconds = $derived(Math.round(milliseconds / 6000));
 	const ONE_SECOND = 1;
 	const TWENTY_SECONDS = 20;
 	const MIN_BREATH = ONE_SECOND;
 	const MAX_BREATH = TWENTY_SECONDS;
 	const dispatch = createEventDispatcher();
-	$effect(() => {
-		seconds = Math.round(milliseconds / 6000);
-	});
 
 	function onTimeFinal() {
 		dispatch('message', {
@@ -22,14 +19,14 @@
 		if (seconds + 1 > MAX_BREATH) {
 			return;
 		}
-		seconds++;
+		milliseconds = (seconds + 1) * 6000;
 	}
 
 	function onMinus() {
 		if (seconds - 1 < MIN_BREATH) {
 			return;
 		}
-		seconds--;
+		milliseconds = (seconds - 1) * 6000;
 	}
 </script>
 
