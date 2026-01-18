@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	let { milliseconds } = $props();
 
-	let seconds = $state(Math.round(milliseconds / 6000));
+	let seconds = $derived(Math.round(milliseconds / 6000));
 	const ONE_SECOND = 1;
 	const TWENTY_SECONDS = 20;
 	const MIN_BREATH = ONE_SECOND;
@@ -19,14 +19,14 @@
 		if (seconds + 1 > MAX_BREATH) {
 			return;
 		}
-		seconds++;
+		milliseconds = (seconds + 1) * 6000;
 	}
 
 	function onMinus() {
 		if (seconds - 1 < MIN_BREATH) {
 			return;
 		}
-		seconds--;
+		milliseconds = (seconds - 1) * 6000;
 	}
 </script>
 

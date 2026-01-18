@@ -12,19 +12,23 @@
 	];
 	let text = $derived(steps[index]);
 	const TWO_MINUTES = 120;
-	const interval = setInterval(() => {
-		elapsed += seconds;
-		if (elapsed >= TWO_MINUTES) {
-			clearInterval(interval);
-			isDone = true;
-			return;
-		}
-		if (index >= 0 && index <= 2) {
-			index++;
-		} else {
-			index = 0;
-		}
-	}, seconds * 1000);
+	$effect(() => {
+		const interval = setInterval(() => {
+			elapsed += seconds;
+			if (elapsed >= TWO_MINUTES) {
+				clearInterval(interval);
+				isDone = true;
+				return;
+			}
+			if (index >= 0 && index <= 2) {
+				index++;
+			} else {
+				index = 0;
+			}
+		}, seconds * 1000);
+
+		return () => clearInterval(interval);
+	});
 </script>
 
 <div>
