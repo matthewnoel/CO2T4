@@ -2,12 +2,15 @@
 	import { createEventDispatcher } from 'svelte';
 	let { milliseconds } = $props();
 
-	let seconds = $state(Math.round(milliseconds / 6000));
+	let seconds = $state(0);
 	const ONE_SECOND = 1;
 	const TWENTY_SECONDS = 20;
 	const MIN_BREATH = ONE_SECOND;
 	const MAX_BREATH = TWENTY_SECONDS;
 	const dispatch = createEventDispatcher();
+	$effect(() => {
+		seconds = Math.round(milliseconds / 6000);
+	});
 
 	function onTimeFinal() {
 		dispatch('message', {
