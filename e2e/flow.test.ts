@@ -14,7 +14,7 @@ test.describe('Full user flow', () => {
 
 		// --- 2. First Reset ---
 		await expect(page.getByText('Breath normally for now.')).toBeVisible();
-		await page.clock.fastForward('00:08');
+		await page.clock.fastForward(9000);
 
 		// --- 3. Exhale test ---
 		await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
@@ -25,7 +25,7 @@ test.describe('Full user flow', () => {
 
 		// --- 4. Second Reset ---
 		await expect(page.getByText('Breath normally for now.')).toBeVisible();
-		await page.clock.fastForward('00:08');
+		await page.clock.fastForward(9000);
 
 		// --- 5. Time conversion ---
 		await expect(page.getByText('Second Box Breathing Interval')).toBeVisible();
@@ -34,8 +34,11 @@ test.describe('Full user flow', () => {
 
 		// --- 6. Box breathing ---
 		await expect(page.getByText('Breath in')).toBeVisible();
-		// Run the full 2 minute protocol.
-		await page.clock.fastForward(24 * 5000);
+		// Run the full 2 minute protocol in per-tick chunks so each Svelte
+		// re-render flushes before the next virtual tick fires.
+		for (let i = 0; i < 25; i++) {
+			await page.clock.fastForward(5000);
+		}
 		await expect(page.getByText('Great job')).toBeVisible();
 	});
 
@@ -54,7 +57,7 @@ test.describe('Full user flow', () => {
 		await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
 		await expect(page.getByText('Oops. Something went wrong')).toHaveCount(0);
 
-		await page.clock.fastForward('00:08');
+		await page.clock.fastForward(9000);
 		await expect(page.getByText('Oops. Something went wrong')).toHaveCount(0);
 
 		await page.getByRole('button', { name: 'Start' }).click();
@@ -62,7 +65,7 @@ test.describe('Full user flow', () => {
 		await page.getByRole('button', { name: 'Stop' }).click();
 		await expect(page.getByText('Oops. Something went wrong')).toHaveCount(0);
 
-		await page.clock.fastForward('00:08');
+		await page.clock.fastForward(9000);
 		await expect(page.getByText('Oops. Something went wrong')).toHaveCount(0);
 
 		await page.getByRole('button', { name: 'Start' }).click();

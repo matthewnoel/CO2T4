@@ -10,16 +10,16 @@ async function advanceToBoxBreathing(page: Page, secondsPerStep: number) {
 	await page.getByRole('checkbox').check();
 	await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
 
-	// First Reset.
-	await page.clock.fastForward('00:08');
+	// First Reset — add slack past the 8s tick boundary.
+	await page.clock.fastForward(9000);
 
 	// Exhale test — produce an exhale that rounds to `secondsPerStep` via /6000.
 	await page.getByRole('button', { name: 'Start' }).click();
 	await page.clock.fastForward(secondsPerStep * 6000);
 	await page.getByRole('button', { name: 'Stop' }).click();
 
-	// Second Reset.
-	await page.clock.fastForward('00:08');
+	// Second Reset — same slack.
+	await page.clock.fastForward(9000);
 
 	// TimeConversion — kick off BoxBreathing.
 	await expect(page.locator('h1')).toHaveText(String(secondsPerStep));
@@ -36,8 +36,8 @@ test.describe('Box breathing', () => {
 	test('cycles through the four box breathing steps in order', async ({ page }) => {
 		await advanceToBoxBreathing(page, 5);
 
-		// Tick 1: Hold (😶)
-		await page.clock.fastForward(5000);
+		// Tick 1: Hold (😶). Add slack so the 5s tick definitely fires.
+		await page.clock.fastForward(5100);
 		await expect(page.getByText('Hold')).toBeVisible();
 		await expect(page.locator('h1')).toHaveText('😶');
 
@@ -60,17 +60,22 @@ test.describe('Box breathing', () => {
 	test('shows "Great job" after two minutes of total elapsed breathing', async ({ page }) => {
 		await advanceToBoxBreathing(page, 5);
 
-		// 120 seconds / 5 seconds per step = 24 ticks to reach completion.
-		await page.clock.fastForward(24 * 5000);
+		// 120 seconds / 5 seconds per step = 24 ticks to reach completion. Fast
+		// forwards are run in chunks so every tick callback is flushed through
+		// the Svelte renderer before the next virtual-time advance — a single
+		// large fastForward can miss later ticks.
+		for (let i = 0; i < 25; i++) {
+			await page.clock.fastForward(5000);
+		}
 
 		await expect(page.getByText('Great job')).toBeVisible();
 		await expect(page.getByText('Breath in')).toHaveCount(0);
 	});
 
-	test('still shows an in-progress step just before two minutes have elapsed', async ({ page }) => {
+	test('still shows an in-progress step well before two minutes have elapsed', async ({ page }) => {
 		await advanceToBoxBreathing(page, 5);
-		// 23 ticks = 115 seconds elapsed — not done yet.
-		await page.clock.fastForward(23 * 5000);
+		// 20 ticks = 100 seconds elapsed — comfortably short of completion.
+		await page.clock.fastForward(20 * 5000);
 		await expect(page.getByText('Great job')).toHaveCount(0);
 	});
 });

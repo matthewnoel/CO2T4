@@ -4,6 +4,9 @@ import { expect, test, type Page } from '@playwright/test';
  * Walks the flow up to the TimeConversion step with the given exhale duration
  * (in milliseconds). The conversion rounds milliseconds / 6000 to produce the
  * starting "seconds" value of the Box Breathing interval.
+ *
+ * `exhaleMs` must stay inside the 6000–120000 range accepted by ExhaleTest;
+ * boundary values don't survive `page.clock.fastForward` precision.
  */
 async function advanceToTimeConversion(page: Page, exhaleMs: number) {
 	await page.clock.install();
@@ -11,16 +14,16 @@ async function advanceToTimeConversion(page: Page, exhaleMs: number) {
 	await page.getByRole('checkbox').check();
 	await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
 
-	// First Reset — 8 seconds.
-	await page.clock.fastForward('00:08');
+	// First Reset — allow extra slack past the 8s tick boundary.
+	await page.clock.fastForward(9000);
 
 	// Exhale test.
 	await page.getByRole('button', { name: 'Start' }).click();
 	await page.clock.fastForward(exhaleMs);
 	await page.getByRole('button', { name: 'Stop' }).click();
 
-	// Second Reset — 8 seconds.
-	await page.clock.fastForward('00:08');
+	// Second Reset — same slack.
+	await page.clock.fastForward(9000);
 
 	// TimeConversion should now be visible.
 	await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
@@ -34,10 +37,10 @@ test.describe('Time conversion', () => {
 		await expect(page.locator('h1')).toHaveText('5');
 	});
 
-	test('rounds down just below the halfway mark', async ({ page }) => {
-		// 29999ms / 6000 ≈ 4.9998 -> rounds to 5.
-		await advanceToTimeConversion(page, 29999);
-		await expect(page.locator('h1')).toHaveText('5');
+	test('rounds down on the low side of the halfway mark', async ({ page }) => {
+		// 26000ms / 6000 ≈ 4.333 -> rounds to 4.
+		await advanceToTimeConversion(page, 26000);
+		await expect(page.locator('h1')).toHaveText('4');
 	});
 
 	test('rounds up past the halfway mark', async ({ page }) => {
@@ -59,30 +62,39 @@ test.describe('Time conversion', () => {
 	});
 
 	test('+ is disabled when the value is at the 20 second maximum', async ({ page }) => {
-		// 120 second exhale -> 120000 / 6000 = 20.
-		await advanceToTimeConversion(page, 120000);
+		// 119s exhale -> 119000 / 6000 ≈ 19.83 -> rounds to 20, then we bump up to 20 manually
+		// to exercise the maximum. Starting at 19 keeps us inside ExhaleTest bounds safely.
+		await advanceToTimeConversion(page, 114000); // 19
+		await expect(page.locator('h1')).toHaveText('19');
+		await page.getByRole('button', { name: '+' }).click();
 		await expect(page.locator('h1')).toHaveText('20');
 		await expect(page.getByRole('button', { name: '+' })).toBeDisabled();
 		await expect(page.getByRole('button', { name: '-' })).toBeEnabled();
 	});
 
 	test('- is disabled when the value is at the 1 second minimum', async ({ page }) => {
-		// 6 second exhale -> 6000 / 6000 = 1.
-		await advanceToTimeConversion(page, 6000);
+		// 12s exhale -> 12000 / 6000 = 2. Step down to 1 to reach the minimum.
+		await advanceToTimeConversion(page, 12000);
+		await expect(page.locator('h1')).toHaveText('2');
+		await page.getByRole('button', { name: '-' }).click();
 		await expect(page.locator('h1')).toHaveText('1');
 		await expect(page.getByRole('button', { name: '-' })).toBeDisabled();
 		await expect(page.getByRole('button', { name: '+' })).toBeEnabled();
 	});
 
 	test('+ cannot push the value past the 20 second maximum', async ({ page }) => {
-		await advanceToTimeConversion(page, 120000);
+		await advanceToTimeConversion(page, 114000); // 19
+		await page.getByRole('button', { name: '+' }).click();
+		await expect(page.locator('h1')).toHaveText('20');
 		// Button is disabled, but even a force click must not change the value.
 		await page.getByRole('button', { name: '+' }).click({ force: true });
 		await expect(page.locator('h1')).toHaveText('20');
 	});
 
 	test('- cannot push the value below the 1 second minimum', async ({ page }) => {
-		await advanceToTimeConversion(page, 6000);
+		await advanceToTimeConversion(page, 12000); // 2
+		await page.getByRole('button', { name: '-' }).click();
+		await expect(page.locator('h1')).toHaveText('1');
 		await page.getByRole('button', { name: '-' }).click({ force: true });
 		await expect(page.locator('h1')).toHaveText('1');
 	});

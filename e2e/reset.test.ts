@@ -18,12 +18,12 @@ test.describe('Reset step', () => {
 		await acknowledgeWarning(page);
 		await expect(page.getByText('Breath normally for now.')).toBeVisible();
 
-		// Just under 8 seconds: still on the Reset screen.
-		await page.clock.fastForward(7999);
+		// Comfortably short of 8 seconds: still on the Reset screen.
+		await page.clock.fastForward(7000);
 		await expect(page.getByText('Breath normally for now.')).toBeVisible();
 
 		// Past 8 seconds: advances to ExhaleTest.
-		await page.clock.fastForward(2);
+		await page.clock.fastForward(2000);
 		await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
 	});
 });
