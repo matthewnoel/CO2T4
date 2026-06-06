@@ -43,7 +43,7 @@ test.describe('Theme toggle', () => {
 	test('is still rendered after advancing past the warning screen', async ({ page }) => {
 		await page.goto('/');
 		await page.getByRole('checkbox').check();
-		await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
+		await page.getByRole('button', { name: 'Acknowledge & continue' }).click();
 		await expect(page.locator('[data-theme-toggle]')).toBeVisible();
 	});
 });

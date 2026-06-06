@@ -1,85 +1,130 @@
-<script>
-	import { createEventDispatcher } from 'svelte';
-	let { milliseconds } = $props();
+<script lang="ts">
+	import { untrack } from 'svelte';
+	import Button from '$lib/Button.svelte';
+	import { exhaleToInterval, MIN_INTERVAL_S, MAX_INTERVAL_S } from '$lib/calibration';
 
-	let seconds = $derived(Math.round(milliseconds / 6000));
-	const ONE_SECOND = 1;
-	const TWENTY_SECONDS = 20;
-	const MIN_BREATH = ONE_SECOND;
-	const MAX_BREATH = TWENTY_SECONDS;
-	const dispatch = createEventDispatcher();
+	let { milliseconds, onStart }: { milliseconds: number; onStart: (secs: number) => void } =
+		$props();
 
-	function onTimeFinal() {
-		dispatch('message', {
-			seconds
-		});
+	// Seed the interval from the measured exhale once; the +/- buttons then own it.
+	let secs = $state(untrack(() => exhaleToInterval(milliseconds)));
+
+	function dec() {
+		if (secs > MIN_INTERVAL_S) secs -= 1;
 	}
 
-	function onPlus() {
-		if (seconds + 1 > MAX_BREATH) {
-			return;
-		}
-		milliseconds = (seconds + 1) * 6000;
+	function inc() {
+		if (secs < MAX_INTERVAL_S) secs += 1;
 	}
 
-	function onMinus() {
-		if (seconds - 1 < MIN_BREATH) {
-			return;
-		}
-		milliseconds = (seconds - 1) * 6000;
-	}
+	let exhaleSecs = $derived((milliseconds / 1000).toFixed(1));
 </script>
 
-<div>
-	<div class="number">
-		<div>
-			<input
-				class="symbol"
-				type="button"
-				value="-"
-				onclick={onMinus}
-				disabled={seconds - 1 < MIN_BREATH}
-			/>
-		</div>
-		<div>
-			<h1>{seconds}</h1>
-		</div>
-		<div>
-			<input
-				class="symbol"
-				type="button"
-				value="+"
-				onclick={onPlus}
-				disabled={seconds + 1 > MAX_BREATH}
-			/>
-		</div>
+<div class="col between calibrate">
+	<div class="head">
+		<span class="mono step">Step 02 · Calibration</span>
+		<h2>Set your interval</h2>
+		<p class="lede">
+			Calibrated from your <strong>{exhaleSecs}s</strong> exhale. Each phase will last this long.
+		</p>
 	</div>
-	<p>Second Box Breathing Interval</p>
-	<input type="button" value="Start" onclick={onTimeFinal} />
+
+	<div class="stepper">
+		<button
+			class="round"
+			aria-label="Decrease interval"
+			onclick={dec}
+			disabled={secs <= MIN_INTERVAL_S}>–</button
+		>
+		<div class="value-wrap">
+			<div class="value" data-testid="interval">{secs}</div>
+			<span class="mono unit">seconds</span>
+		</div>
+		<button
+			class="round"
+			aria-label="Increase interval"
+			onclick={inc}
+			disabled={secs >= MAX_INTERVAL_S}>+</button
+		>
+	</div>
+
+	<Button full size="lg" onclick={() => onStart(secs)}>Start box breathing</Button>
 </div>
 
 <style>
-	h1 {
-		font-size: 8rem;
-		padding: 0 0.25em;
+	.step {
+		color: var(--accent);
+		font-size: 11.5px;
 	}
 
-	p {
-		margin: 1.5em 0 2em 0;
+	.head h2 {
+		font-family: var(--font-display);
+		font-size: 24px;
+		font-weight: 700;
+		color: var(--ink);
+		margin: 10px 0 0;
+		line-height: 1.12;
 	}
 
-	.number {
+	.lede {
+		font-size: 13.5px;
+		color: var(--muted);
+		margin: 8px 0 0;
+		line-height: 1.5;
+	}
+
+	.lede strong {
+		color: var(--ink);
+	}
+
+	.stepper {
 		display: flex;
-		flex-direction: row;
-		flex-wrap: nowrap;
-		justify-content: center;
 		align-items: center;
+		justify-content: center;
+		gap: 22px;
 	}
 
-	.symbol {
-		padding: 0;
+	.round {
+		width: 52px;
+		height: 52px;
 		border-radius: 50%;
-		width: 3em;
-		height: 3em;
+		border: 1.5px solid var(--accent);
+		background: transparent;
+		color: var(--accent);
+		font-size: 26px;
+		cursor: pointer;
+		font-family: var(--font-body);
+		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.15s;
+	}
+
+	.round:disabled {
+		border-color: var(--line);
+		color: var(--faint);
+		cursor: default;
+	}
+
+	.value-wrap {
+		text-align: center;
+		min-width: 96px;
+	}
+
+	.value {
+		font-family: var(--font-display);
+		font-size: 76px;
+		font-weight: 700;
+		color: var(--ink);
+		line-height: 0.9;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.unit {
+		display: block;
+		margin-top: 6px;
+		font-size: 11px;
+		color: var(--faint);
 	}
 </style>

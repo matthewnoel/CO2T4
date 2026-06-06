@@ -5,53 +5,54 @@ test.describe('Warning screen', () => {
 		await page.goto('/');
 	});
 
-	test('renders the warning heading and subheading', async ({ page }) => {
-		await expect(page.locator('h1')).toHaveText('Warning!');
-		await expect(page.locator('h2')).toHaveText('Read Before Continuing');
+	test('renders the heading and protocol intro', async ({ page }) => {
+		await expect(page.locator('h1')).toHaveText('Before you begin');
+		await expect(page.getByText('Box Breathing')).toBeVisible();
 	});
 
 	test('links to the source research paper and opens in a new tab', async ({ page }) => {
-		const paper = page.getByRole('link', {
-			name: /Brief Structured Respiration Practices/i
-		});
+		const paper = page.getByRole('link', { name: /Balban/i });
 		await expect(paper).toHaveAttribute('href', 'https://doi.org/10.1016/j.xcrm.2022.100895');
 		await expect(paper).toHaveAttribute('target', '_blank');
 		await expect(paper).toHaveAttribute('rel', 'noreferrer');
 	});
 
 	test('links to the project source and third-party licenses', async ({ page }) => {
-		const source = page.getByRole('link', { name: /is available here/i }).first();
+		const source = page.getByRole('link', { name: /Source code/i });
 		await expect(source).toHaveAttribute('href', 'https://github.com/matthewnoel/CO2T4');
 		await expect(source).toHaveAttribute('target', '_blank');
+		await expect(source).toHaveAttribute('rel', 'noreferrer');
 
-		const licenses = page.getByRole('link', { name: /are available here/i });
+		const licenses = page.getByRole('link', { name: /Third-party licenses/i });
 		await expect(licenses).toHaveAttribute(
 			'href',
 			'https://github.com/matthewnoel/CO2T4/blob/main/third-party-licenses.txt'
 		);
 		await expect(licenses).toHaveAttribute('target', '_blank');
+		await expect(licenses).toHaveAttribute('rel', 'noreferrer');
 	});
 
-	test('renders the three required disclaimers', async ({ page }) => {
-		await expect(page.getByText('This tool is intended for educational use only.')).toBeVisible();
+	test('renders the medical disclaimer with its required points', async ({ page }) => {
+		await expect(page.getByText('Medical disclaimer')).toBeVisible();
+		await expect(page.getByText('For educational use only. Not medical advice.')).toBeVisible();
 		await expect(
-			page.getByText('This tool is not affiliated with the authors of the aforementioned paper.')
+			page.getByText('Consult a licensed physician before any breathing exercise.')
 		).toBeVisible();
-		await expect(page.getByText(/This tool does not provide medical advice\./i)).toBeVisible();
+		await expect(page.getByText(/No warranty\./i)).toBeVisible();
 	});
 
 	test('terms checkbox starts unchecked and the continue button starts disabled', async ({
 		page
 	}) => {
 		await expect(page.getByRole('checkbox')).not.toBeChecked();
-		await expect(page.getByRole('button', { name: 'Acknowledge and Continue' })).toBeDisabled();
+		await expect(page.getByRole('button', { name: 'Acknowledge & continue' })).toBeDisabled();
 	});
 
 	test('checking the terms enables the continue button and unchecking disables it again', async ({
 		page
 	}) => {
 		const checkbox = page.getByRole('checkbox');
-		const button = page.getByRole('button', { name: 'Acknowledge and Continue' });
+		const button = page.getByRole('button', { name: 'Acknowledge & continue' });
 
 		await checkbox.check();
 		await expect(checkbox).toBeChecked();
@@ -64,13 +65,13 @@ test.describe('Warning screen', () => {
 
 	test('does not advance past the warning when the button is disabled', async ({ page }) => {
 		// The button is disabled; forcing a click should have no effect.
-		await page.getByRole('button', { name: 'Acknowledge and Continue' }).click({ force: true });
-		await expect(page.locator('h1')).toHaveText('Warning!');
+		await page.getByRole('button', { name: 'Acknowledge & continue' }).click({ force: true });
+		await expect(page.locator('h1')).toHaveText('Before you begin');
 	});
 
 	test('acknowledging advances past the warning screen', async ({ page }) => {
 		await page.getByRole('checkbox').check();
-		await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
+		await page.getByRole('button', { name: 'Acknowledge & continue' }).click();
 		await expect(page.locator('h1')).toHaveCount(0);
 	});
 
