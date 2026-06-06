@@ -3,6 +3,7 @@
 	import Icon from '$lib/Icon.svelte';
 	import { createTimer } from '$lib/clock.svelte';
 	import { isValidExhale } from '$lib/calibration';
+	import { t } from '$lib/i18n/locale.svelte';
 
 	let { onResult }: { onResult: (ms: number) => void } = $props();
 
@@ -27,8 +28,8 @@
 
 <div class="col between exhale">
 	<div class="head">
-		<span class="mono step">Step 01 · Exhale test</span>
-		<h2>{timer.running ? 'Exhale as slowly as you can' : 'Measure your slowest exhale'}</h2>
+		<span class="mono step">{t('Step 01 · Exhale test')}</span>
+		<h2>{timer.running ? t('Exhale as slowly as you can') : t('Measure your slowest exhale')}</h2>
 	</div>
 
 	<div class="meter">
@@ -41,10 +42,12 @@
 		</div>
 		<p class="guide">
 			{#if timer.running}
-				Tap <strong>Stop</strong> the moment you run out of air. Don’t hold your breath.
+				{t('Tap')} <strong>{t('Stop')}</strong>
+				{t('the moment you run out of air. Don’t hold your breath.')}
 			{:else}
-				Inhale completely through your nose. Then start the timer and let the air out as slowly as
-				possible.
+				{t(
+					'Inhale completely through your nose. Then start the timer and let the air out as slowly as possible.'
+				)}
 			{/if}
 		</p>
 	</div>
@@ -55,7 +58,7 @@
 		variant={timer.running ? 'secondary' : 'primary'}
 		onclick={timer.running ? stop : start}
 	>
-		{timer.running ? 'Stop' : 'Start'}
+		{timer.running ? t('Stop') : t('Start')}
 	</Button>
 </div>
 

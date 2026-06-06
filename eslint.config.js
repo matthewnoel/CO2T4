@@ -19,7 +19,10 @@ export default ts.config(
 		}
 	},
 	{
-		files: ['**/*.svelte'],
+		// Components and Svelte runes modules (*.svelte.ts / *.svelte.js) are parsed by
+		// svelte-eslint-parser; point its script sub-parser at typescript-eslint so the
+		// TypeScript syntax in those files parses correctly.
+		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
 
 		languageOptions: {
 			parserOptions: {

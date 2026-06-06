@@ -2,6 +2,7 @@
 	import ElementTile from '$lib/ElementTile.svelte';
 	import Button from '$lib/Button.svelte';
 	import Icon from '$lib/Icon.svelte';
+	import { t } from '$lib/i18n/locale.svelte';
 
 	let { exhaleMs, interval, onRestart } = $props();
 
@@ -13,21 +14,22 @@
 </script>
 
 <div class="col center done">
-	<div class="badge"><ElementTile sym="✓" name="Complete" size={64} /></div>
-	<h2>Great job</h2>
-	<p class="lede">You completed a full two-minute box-breathing cycle.</p>
+	<div class="badge"><ElementTile sym="✓" name={t('Complete')} size={64} /></div>
+	<h2>{t('Great job')}</h2>
+	<p class="lede">{t('You completed a full two-minute box-breathing cycle.')}</p>
 
 	<div class="stats">
 		{#each stats as [k, v] (k)}
 			<div class="stat">
 				<div class="stat-v">{v}</div>
-				<span class="mono stat-k">{k}</span>
+				<span class="mono stat-k">{t(k)}</span>
 			</div>
 		{/each}
 	</div>
 
 	<Button full variant="secondary" onclick={onRestart}>
-		<Icon name="restart" size={17} /> Start over
+		<Icon name="restart" size={17} />
+		{t('Start over')}
 	</Button>
 </div>
 

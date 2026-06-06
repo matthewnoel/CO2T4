@@ -2,6 +2,7 @@
 	import { untrack } from 'svelte';
 	import Button from '$lib/Button.svelte';
 	import { exhaleToInterval, MIN_INTERVAL_S, MAX_INTERVAL_S } from '$lib/calibration';
+	import { t } from '$lib/i18n/locale.svelte';
 
 	let { milliseconds, onStart }: { milliseconds: number; onStart: (secs: number) => void } =
 		$props();
@@ -22,33 +23,34 @@
 
 <div class="col between calibrate">
 	<div class="head">
-		<span class="mono step">Step 02 · Calibration</span>
-		<h2>Set your interval</h2>
+		<span class="mono step">{t('Step 02 · Calibration')}</span>
+		<h2>{t('Set your interval')}</h2>
 		<p class="lede">
-			Calibrated from your <strong>{exhaleSecs}s</strong> exhale. Each phase will last this long.
+			{t('Calibrated from your')} <strong>{exhaleSecs}s</strong>
+			{t('exhale. Each phase will last this long.')}
 		</p>
 	</div>
 
 	<div class="stepper">
 		<button
 			class="round"
-			aria-label="Decrease interval"
+			aria-label={t('Decrease interval')}
 			onclick={dec}
 			disabled={secs <= MIN_INTERVAL_S}>–</button
 		>
 		<div class="value-wrap">
 			<div class="value" data-testid="interval">{secs}</div>
-			<span class="mono unit">seconds</span>
+			<span class="mono unit">{t('seconds')}</span>
 		</div>
 		<button
 			class="round"
-			aria-label="Increase interval"
+			aria-label={t('Increase interval')}
 			onclick={inc}
 			disabled={secs >= MAX_INTERVAL_S}>+</button
 		>
 	</div>
 
-	<Button full size="lg" onclick={() => onStart(secs)}>Start box breathing</Button>
+	<Button full size="lg" onclick={() => onStart(secs)}>{t('Start box breathing')}</Button>
 </div>
 
 <style>
