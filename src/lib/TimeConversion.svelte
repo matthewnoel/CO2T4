@@ -30,15 +30,21 @@
 	</div>
 
 	<div class="stepper">
-		<button class="round" aria-label="Decrease interval" onclick={dec} disabled={secs <= MIN_INTERVAL_S}
-			>–</button
+		<button
+			class="round"
+			aria-label="Decrease interval"
+			onclick={dec}
+			disabled={secs <= MIN_INTERVAL_S}>–</button
 		>
 		<div class="value-wrap">
 			<div class="value" data-testid="interval">{secs}</div>
 			<span class="mono unit">seconds</span>
 		</div>
-		<button class="round" aria-label="Increase interval" onclick={inc} disabled={secs >= MAX_INTERVAL_S}
-			>+</button
+		<button
+			class="round"
+			aria-label="Increase interval"
+			onclick={inc}
+			disabled={secs >= MAX_INTERVAL_S}>+</button
 		>
 	</div>
 

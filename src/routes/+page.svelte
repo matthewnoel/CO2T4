@@ -70,7 +70,11 @@
 						onEnd={() => session.advance()}
 					/>
 				{:else}
-					<Done exhaleMs={session.exhaleMs} interval={session.interval} onRestart={() => session.reset()} />
+					<Done
+						exhaleMs={session.exhaleMs}
+						interval={session.interval}
+						onRestart={() => session.reset()}
+					/>
 				{/if}
 			</div>
 		{/key}
