@@ -4,22 +4,18 @@ async function advanceToExhaleTest(page: Page) {
 	await page.clock.install();
 	await page.goto('/');
 	await page.getByRole('checkbox').check();
-	await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
-	// Skip the initial 8 second Reset step (add some slack to make sure the
+	await page.getByRole('button', { name: 'Acknowledge & continue' }).click();
+	// Skip the initial 8 second Rest step (add some slack to make sure the
 	// timer fires — `fastForward` can otherwise sit right on the tick boundary).
 	await page.clock.fastForward(9000);
 	await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
 }
 
 test.describe('Exhale test', () => {
-	test('shows the "breath in" guidance and a Start button before the timer runs', async ({
-		page
-	}) => {
+	test('shows the "inhale" guidance and a Start button before the timer runs', async ({ page }) => {
 		await advanceToExhaleTest(page);
-		await expect(page.getByText('Breath in completely through your nose.')).toBeVisible();
-		await expect(
-			page.getByText('Then start the timer and exhale as slowly as you can.')
-		).toBeVisible();
+		await expect(page.getByText(/Inhale completely through your nose/)).toBeVisible();
+		await expect(page.getByText('Measure your slowest exhale')).toBeVisible();
 		await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
 		await expect(page.getByRole('button', { name: 'Stop' })).toHaveCount(0);
 	});
@@ -28,8 +24,8 @@ test.describe('Exhale test', () => {
 		await advanceToExhaleTest(page);
 		await page.getByRole('button', { name: 'Start' }).click();
 		await expect(page.getByRole('button', { name: 'Stop' })).toBeVisible();
-		await expect(page.getByText('Click "Stop" when you run out of air.')).toBeVisible();
-		await expect(page.getByText('Do not hold your breath.')).toBeVisible();
+		await expect(page.getByText('Exhale as slowly as you can')).toBeVisible();
+		await expect(page.getByText(/run out of air/)).toBeVisible();
 	});
 
 	test('exhales shorter than 6 seconds are rejected and reset to Start', async ({ page }) => {
@@ -42,7 +38,7 @@ test.describe('Exhale test', () => {
 
 		// Still on the Exhale test, back to the Start state.
 		await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
-		await expect(page.getByText('Breath in completely through your nose.')).toBeVisible();
+		await expect(page.getByText(/Inhale completely through your nose/)).toBeVisible();
 	});
 
 	test('exhales longer than 120 seconds are rejected and reset to Start', async ({ page }) => {
@@ -54,10 +50,10 @@ test.describe('Exhale test', () => {
 		await page.getByRole('button', { name: 'Stop' }).click();
 
 		await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
-		await expect(page.getByText('Breath in completely through your nose.')).toBeVisible();
+		await expect(page.getByText(/Inhale completely through your nose/)).toBeVisible();
 	});
 
-	test('a valid exhale between 6 and 120 seconds advances to the next Reset step', async ({
+	test('a valid exhale between 6 and 120 seconds advances to the next Rest step', async ({
 		page
 	}) => {
 		await advanceToExhaleTest(page);
@@ -67,7 +63,7 @@ test.describe('Exhale test', () => {
 		await page.clock.fastForward(30000);
 		await page.getByRole('button', { name: 'Stop' }).click();
 
-		await expect(page.getByText('Breath normally for now.')).toBeVisible();
+		await expect(page.getByText('Breathe normally')).toBeVisible();
 	});
 
 	test('a short valid exhale just past the 6 second minimum advances the flow', async ({
@@ -78,7 +74,7 @@ test.describe('Exhale test', () => {
 		// 10 seconds — safely inside the accepted range, covers the low end.
 		await page.clock.fastForward(10000);
 		await page.getByRole('button', { name: 'Stop' }).click();
-		await expect(page.getByText('Breath normally for now.')).toBeVisible();
+		await expect(page.getByText('Breathe normally')).toBeVisible();
 	});
 
 	test('a long valid exhale just under the 120 second maximum advances the flow', async ({
@@ -89,6 +85,6 @@ test.describe('Exhale test', () => {
 		// 115 seconds — safely inside the accepted range, covers the high end.
 		await page.clock.fastForward(115000);
 		await page.getByRole('button', { name: 'Stop' }).click();
-		await expect(page.getByText('Breath normally for now.')).toBeVisible();
+		await expect(page.getByText('Breathe normally')).toBeVisible();
 	});
 });

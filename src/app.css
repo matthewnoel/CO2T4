@@ -1,66 +1,153 @@
-@import url('https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-[data-theme='light'] {
-	--color-bg: #ffffff;
-	--color-fg: #000000;
+:root {
+	--font-display: 'Space Grotesk', system-ui, sans-serif;
+	--font-body: 'IBM Plex Sans', system-ui, sans-serif;
+	--font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+	--radius: 8px;
 }
 
+/* B · Lab theme — light (default) */
+:root,
+[data-theme='light'] {
+	--bg: #f2f5f3;
+	--surface: #ffffff;
+	--sunken: #e8efeb;
+	--ink: #152019;
+	--muted: #4f6b5e;
+	--faint: #83968b;
+	--accent: #1c9b55;
+	--accent-ink: #ffffff;
+	--accent-soft: #dcf0e4;
+	--line: #d9e5df;
+	--danger: #ae3a20;
+	--danger-soft: #f8e8e2;
+}
+
+/* B · Lab theme — dark */
 [data-theme='dark'] {
-	--color-bg: #000000;
-	--color-fg: #ffffff;
+	--bg: #0e1512;
+	--surface: #161f1b;
+	--sunken: #090f0c;
+	--ink: #dcebe2;
+	--muted: #6e8b7e;
+	--faint: #536b60;
+	--accent: #48d481;
+	--accent-ink: #04150c;
+	--accent-soft: rgba(72, 212, 129, 0.14);
+	--line: #21302a;
+	--danger: #e97a5f;
+	--danger-soft: rgba(233, 122, 95, 0.14);
 }
 
 * {
 	margin: 0;
+	box-sizing: border-box;
 }
 
-body,
-input {
-	background-color: white;
-	color: black;
-	font-family: 'Tilt Warp', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	font-size: 2rem;
-	background-color: var(--color-bg);
-	color: var(--color-fg);
+html,
+body {
+	height: 100%;
 }
 
-input {
-	background-color: transparent;
-	border: 5px solid black;
-	border-radius: 0.75em;
-	border-style: solid;
-	font-size: 3rem;
-	padding: 0.5em;
+body {
+	background: var(--bg);
+	color: var(--ink);
+	font-family: var(--font-body);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	transition:
+		background 0.35s,
+		color 0.35s;
 }
 
-input:active {
-	background-color: black;
-	color: white;
+/* Column layout shared by every screen. */
+.col {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 26px;
+	box-sizing: border-box;
 }
 
-input:focus,
-input:hover {
+.col.center {
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.col.between {
+	justify-content: space-between;
+}
+
+/* Lab "data label" text — mono, spaced, upper. */
+.mono {
+	font-family: var(--font-mono);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+/* Round icon button used in the app bar. */
+.icon-btn {
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--muted);
 	cursor: pointer;
-	border-style: dashed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
+	transition:
+		background 0.15s,
+		color 0.15s;
 }
 
-input:disabled {
-	border-style: solid;
-	border-color: lightgray;
-	background-color: whitesmoke;
-	color: lightgray;
+.icon-btn:hover {
+	background: var(--sunken);
 }
 
-@media (max-width: 800px) {
-	body {
-		font-size: 1.5rem;
+/* Each screen fades in on entry. */
+.co2t4-screen {
+	height: 100%;
+	animation: co2fade 0.32s ease both;
+}
+
+@keyframes co2fade {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
 	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
 
-	input {
-		font-size: 2rem;
+.rest-pulse {
+	animation: restpulse 3.4s ease-in-out infinite;
+}
+
+@keyframes restpulse {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.06);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.co2t4-screen,
+	.rest-pulse {
+		animation: none !important;
 	}
 }

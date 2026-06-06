@@ -8,12 +8,12 @@ test.describe('Full user flow', () => {
 		await page.goto('/');
 
 		// --- 1. Warning screen ---
-		await expect(page.locator('h1')).toHaveText('Warning!');
+		await expect(page.locator('h1')).toHaveText('Before you begin');
 		await page.getByRole('checkbox').check();
-		await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
+		await page.getByRole('button', { name: 'Acknowledge & continue' }).click();
 
-		// --- 2. First Reset ---
-		await expect(page.getByText('Breath normally for now.')).toBeVisible();
+		// --- 2. First Rest ---
+		await expect(page.getByText('Breathe normally')).toBeVisible();
 		await page.clock.fastForward(9000);
 
 		// --- 3. Exhale test ---
@@ -23,38 +23,38 @@ test.describe('Full user flow', () => {
 		await page.clock.fastForward(30000); // 30s exhale -> 5s intervals
 		await page.getByRole('button', { name: 'Stop' }).click();
 
-		// --- 4. Second Reset ---
-		await expect(page.getByText('Breath normally for now.')).toBeVisible();
+		// --- 4. Second Rest ---
+		await expect(page.getByText('Breathe normally')).toBeVisible();
 		await page.clock.fastForward(9000);
 
-		// --- 5. Time conversion ---
-		await expect(page.getByText('Second Box Breathing Interval')).toBeVisible();
-		await expect(page.locator('h1')).toHaveText('5');
-		await page.getByRole('button', { name: 'Start' }).click();
+		// --- 5. Calibration ---
+		await expect(page.getByText('Set your interval')).toBeVisible();
+		await expect(page.getByTestId('interval')).toHaveText('5');
+		await page.getByRole('button', { name: 'Start box breathing' }).click();
 
 		// --- 6. Box breathing ---
-		await expect(page.getByText('Breath in')).toBeVisible();
+		await expect(page.getByText('Inhale')).toBeVisible();
 		// Run the full 2 minute protocol in per-tick chunks so each Svelte
 		// re-render flushes before the next virtual tick fires.
 		for (let i = 0; i < 25; i++) {
 			await page.clock.fastForward(5000);
 		}
-		await expect(page.getByText('Great job')).toBeVisible();
+		await expect(page.getByText('Great work')).toBeVisible();
 	});
 
 	test('staying on the warning screen never renders flow components', async ({ page }) => {
 		await page.goto('/');
-		await expect(page.getByText('Breath normally for now.')).toHaveCount(0);
+		await expect(page.getByText('Breathe normally')).toHaveCount(0);
 		await expect(page.getByRole('button', { name: 'Start' })).toHaveCount(0);
-		await expect(page.getByText('Second Box Breathing Interval')).toHaveCount(0);
-		await expect(page.getByText('Great job')).toHaveCount(0);
+		await expect(page.getByText('Set your interval')).toHaveCount(0);
+		await expect(page.getByText('Great work')).toHaveCount(0);
 	});
 
 	test('no error fallback is rendered anywhere during the flow', async ({ page }) => {
 		await page.clock.install();
 		await page.goto('/');
 		await page.getByRole('checkbox').check();
-		await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
+		await page.getByRole('button', { name: 'Acknowledge & continue' }).click();
 		await expect(page.getByText('Oops. Something went wrong')).toHaveCount(0);
 
 		await page.clock.fastForward(9000);
@@ -68,7 +68,7 @@ test.describe('Full user flow', () => {
 		await page.clock.fastForward(9000);
 		await expect(page.getByText('Oops. Something went wrong')).toHaveCount(0);
 
-		await page.getByRole('button', { name: 'Start' }).click();
+		await page.getByRole('button', { name: 'Start box breathing' }).click();
 		await expect(page.getByText('Oops. Something went wrong')).toHaveCount(0);
 	});
 });

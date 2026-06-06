@@ -52,18 +52,18 @@ test.describe('Application shell', () => {
 		await page.clock.install();
 		await page.goto('/');
 		await page.getByRole('checkbox').check();
-		await page.getByRole('button', { name: 'Acknowledge and Continue' }).click();
+		await page.getByRole('button', { name: 'Acknowledge & continue' }).click();
 		await page.clock.fastForward(9000);
 		await page.getByRole('button', { name: 'Start' }).click();
 		await page.clock.fastForward(30000);
 		await page.getByRole('button', { name: 'Stop' }).click();
 		await page.clock.fastForward(9000);
-		await page.getByRole('button', { name: 'Start' }).click();
+		await page.getByRole('button', { name: 'Start box breathing' }).click();
 		// Chunked advance so every BoxBreathing tick actually fires.
 		for (let i = 0; i < 25; i++) {
 			await page.clock.fastForward(5000);
 		}
-		await expect(page.getByText('Great job')).toBeVisible();
+		await expect(page.getByText('Great work')).toBeVisible();
 
 		expect(errors).toEqual([]);
 	});

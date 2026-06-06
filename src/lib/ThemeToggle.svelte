@@ -1,44 +1,32 @@
-<script>
-	// @ts-expect-error because of laziness
-	const getTheme = ({ localStorageTheme, systemSettingDark }) => {
-		if (localStorageTheme !== null) return localStorageTheme;
-		if (systemSettingDark.matches) return dark;
-		return light;
-	};
-	// @ts-expect-error because of laziness
-	const update = (theme) => {
-		value = theme === dark ? '🌞' : '🌚';
-		document.querySelector('html')?.setAttribute('data-theme', theme);
-	};
-	const handleClick = () => {
-		// @ts-expect-error because of laziness
-		const newTheme = currentThemeSetting === dark ? light : dark;
-		localStorage.setItem('theme', newTheme);
-		update(newTheme);
-		currentThemeSetting = newTheme;
-	};
-	const light = 'light';
-	const dark = 'dark';
-	let localStorageTheme;
-	let systemSettingDark;
-	// @ts-expect-error because of laziness
-	let currentThemeSetting;
-	let value = $state('🌞');
-	export function onMount() {
-		localStorageTheme = localStorage.getItem('theme');
-		systemSettingDark = window.matchMedia('(prefers-color-scheme: dark)');
-		currentThemeSetting = getTheme({
-			localStorageTheme,
-			systemSettingDark
-		});
-		update(currentThemeSetting);
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import Icon from '$lib/Icon.svelte';
+
+	let mode = $state<'light' | 'dark'>('light');
+
+	function apply(next: 'light' | 'dark') {
+		document.documentElement.setAttribute('data-theme', next);
+	}
+
+	onMount(() => {
+		const stored = localStorage.getItem('theme');
+		const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		mode = stored === 'light' || stored === 'dark' ? stored : systemDark ? 'dark' : 'light';
+		apply(mode);
+	});
+
+	function toggle() {
+		mode = mode === 'dark' ? 'light' : 'dark';
+		localStorage.setItem('theme', mode);
+		apply(mode);
 	}
 </script>
 
-<input
-	type="button"
+<button
+	class="icon-btn"
 	data-theme-toggle
-	aria-label={value === '🌚' ? 'Change to dark theme.' : 'Change to light theme.'}
-	{value}
-	onclick={handleClick}
-/>
+	aria-label={mode === 'dark' ? 'Change to light theme.' : 'Change to dark theme.'}
+	onclick={toggle}
+>
+	<Icon name={mode === 'dark' ? 'sun' : 'moon'} size={18} />
+</button>
