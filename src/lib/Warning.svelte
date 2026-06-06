@@ -2,10 +2,13 @@
 	import ElementTile from '$lib/ElementTile.svelte';
 	import Button from '$lib/Button.svelte';
 	import Icon from '$lib/Icon.svelte';
+	import { t } from '$lib/i18n/locale.svelte';
 
 	let { onAccept } = $props();
 	let ok = $state(false);
 
+	// English source strings double as keys; t() is applied at the usage site so
+	// the list stays the source of truth and re-renders on locale change.
 	const disclaimers = [
 		'For educational use only. Not medical advice.',
 		'Consult a licensed physician before any breathing exercise.',
@@ -16,26 +19,27 @@
 <div class="col between warning">
 	<div class="intro">
 		<div class="tiles">
-			<ElementTile sym="C" num="6" name="A Box" size={50} />
-			<ElementTile sym="O²" num="8" name="Breathing" size={50} />
-			<ElementTile sym="T⁴" num="22" name="Tool" size={50} />
+			<ElementTile sym="C" num="6" name={t('A Box')} size={50} />
+			<ElementTile sym="O²" num="8" name={t('Breathing')} size={50} />
+			<ElementTile sym="T⁴" num="22" name={t('Tool')} size={50} />
 		</div>
-		<h1>Before you begin</h1>
+		<h1>{t('Before you begin')}</h1>
 		<p class="lede">
-			A guide to the <strong>Box Breathing</strong> protocol from
+			{t('A guide to the')} <strong>{t('Box Breathing')}</strong>
+			{t('protocol from')}
 			<a href="https://doi.org/10.1016/j.xcrm.2022.100895" target="_blank" rel="noreferrer"
-				>Balban et&nbsp;al. (2023)</a
-			>.
+				>{t('Balban et al. (2023)')}</a
+			>{t('.')}
 		</p>
 	</div>
 
 	<div class="disclaimer">
 		<div class="dis-head">
 			<Icon name="info" size={16} stroke="var(--danger)" />
-			<span class="mono dis-tag">Medical disclaimer</span>
+			<span class="mono dis-tag">{t('Medical disclaimer')}</span>
 		</div>
 		{#each disclaimers as d (d)}
-			<div class="bullet"><span class="dash">—</span><span>{d}</span></div>
+			<div class="bullet"><span class="dash">—</span><span>{t(d)}</span></div>
 		{/each}
 	</div>
 
@@ -44,19 +48,21 @@
 			<input type="checkbox" bind:checked={ok} />
 			<span class="box"></span>
 			<span class="check-text"
-				>I understand this is an unofficial tool offered with no warranty, and I accept full
-				responsibility for my use of it.</span
+				>{t(
+					'I understand this is an unofficial tool offered with no warranty, and I accept full responsibility for my use of it.'
+				)}</span
 			>
 		</label>
-		<Button full disabled={!ok} onclick={onAccept}>Acknowledge &amp; continue</Button>
+		<Button full disabled={!ok} onclick={onAccept}>{t('Acknowledge & continue')}</Button>
 		<div class="meta">
-			<a href="https://github.com/matthewnoel/CO2T4" target="_blank" rel="noreferrer">Source code</a
+			<a href="https://github.com/matthewnoel/CO2T4" target="_blank" rel="noreferrer"
+				>{t('Source code')}</a
 			>
 			<span aria-hidden="true">·</span>
 			<a
 				href="https://github.com/matthewnoel/CO2T4/blob/main/third-party-licenses.txt"
 				target="_blank"
-				rel="noreferrer">Third-party licenses</a
+				rel="noreferrer">{t('Third-party licenses')}</a
 			>
 		</div>
 	</div>

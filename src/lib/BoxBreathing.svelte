@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import Button from '$lib/Button.svelte';
 	import { createTimer } from '$lib/clock.svelte';
+	import { t } from '$lib/i18n/locale.svelte';
 
 	let { interval, onDone, onEnd }: { interval: number; onDone: () => void; onEnd: () => void } =
 		$props();
@@ -62,8 +63,8 @@
 
 <div class="col between breathe">
 	<div class="bar">
-		<span class="mono accent">Box breathing</span>
-		<span class="mono muted">{interval}s · {mm}:{ss} left</span>
+		<span class="mono accent">{t('Box breathing')}</span>
+		<span class="mono muted">{interval}s · {mm}:{ss} {t('left')}</span>
 	</div>
 
 	<div class="stage">
@@ -78,8 +79,8 @@
 			<span class="tick br"></span>
 		</div>
 		<div class="center">
-			<span class="phase">{ph.label}</span>
-			<span class="phase-sub">{ph.sub}</span>
+			<span class="phase">{t(ph.label)}</span>
+			<span class="phase-sub">{t(ph.sub)}</span>
 			<span class="phase-count">{secLeft}</span>
 		</div>
 	</div>
@@ -90,7 +91,7 @@
 				<span class="dot" class:on={i === idx}></span>
 			{/each}
 		</div>
-		<Button variant="ghost" size="sm" onclick={onEnd}>End session</Button>
+		<Button variant="ghost" size="sm" onclick={onEnd}>{t('End session')}</Button>
 	</div>
 </div>
 

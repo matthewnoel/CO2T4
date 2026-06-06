@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { createTimer } from '$lib/clock.svelte';
+	import { t } from '$lib/i18n/locale.svelte';
 
 	let { sub = 'Rest before the next step.', onDone, onSkip } = $props();
 
@@ -43,9 +44,9 @@
 		</div>
 	</div>
 
-	<h2>Breathe normally</h2>
-	<p class="sub">{sub} Ideally through the nose.</p>
-	<button class="skip mono" onclick={onSkip}>Skip →</button>
+	<h2>{t('Breathe normally')}</h2>
+	<p class="sub">{sub} {t('Ideally through the nose.')}</p>
+	<button class="skip mono" onclick={onSkip}>{t('Skip →')}</button>
 </div>
 
 <style>

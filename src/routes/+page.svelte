@@ -6,19 +6,25 @@
 	import BoxBreathing from '$lib/BoxBreathing.svelte';
 	import Done from '$lib/Done.svelte';
 	import ThemeToggle from '$lib/ThemeToggle.svelte';
+	import LocaleSwitcher from '$lib/LocaleSwitcher.svelte';
 	import Wordmark from '$lib/Wordmark.svelte';
 	import Pips from '$lib/Pips.svelte';
 	import Icon from '$lib/Icon.svelte';
 	import { createSession, PIP_TOTAL } from '$lib/session.svelte';
+	import { t } from '$lib/i18n/locale.svelte';
 
 	const session = createSession();
 </script>
+
+<svelte:head>
+	<title>{t('Carbon Dioxide Tolerance Testing & Training Tool')}</title>
+</svelte:head>
 
 <div class="app">
 	<header class="appbar">
 		<div class="bar-side">
 			{#if session.canBack}
-				<button class="icon-btn" aria-label="Back" onclick={() => session.back()}>
+				<button class="icon-btn" aria-label={t('Back')} onclick={() => session.back()}>
 					<Icon name="back" size={19} />
 				</button>
 			{:else}
@@ -27,6 +33,7 @@
 		</div>
 		<Pips total={PIP_TOTAL} idx={session.pipIndex} />
 		<div class="bar-side right">
+			<LocaleSwitcher />
 			<ThemeToggle />
 		</div>
 	</header>
@@ -38,7 +45,7 @@
 					<Warning onAccept={() => session.advance()} />
 				{:else if session.current === 'rest1'}
 					<Reset
-						sub="Settle in for the exhale test."
+						sub={t('Settle in for the exhale test.')}
 						onDone={() => session.advance()}
 						onSkip={() => session.advance()}
 					/>
@@ -51,7 +58,7 @@
 					/>
 				{:else if session.current === 'rest2'}
 					<Reset
-						sub="Recover before you calibrate."
+						sub={t('Recover before you calibrate.')}
 						onDone={() => session.advance()}
 						onSkip={() => session.advance()}
 					/>
