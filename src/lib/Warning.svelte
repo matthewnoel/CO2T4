@@ -16,9 +16,9 @@
 <div class="col between warning">
 	<div class="intro">
 		<div class="tiles">
-			<ElementTile sym="C" num="6" name="Carbon" size={50} />
-			<ElementTile sym="O²" num="8" name="Oxygen" size={50} />
-			<ElementTile sym="T⁴" name="Test·Train" size={50} />
+			<ElementTile sym="C" num="6" name="A Box" size={50} />
+			<ElementTile sym="O²" num="8" name="Breathing" size={50} />
+			<ElementTile sym="T⁴" num="22" name="Tool" size={50} />
 		</div>
 		<h1>Before you begin</h1>
 		<p class="lede">
