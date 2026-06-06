@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import Button from '$lib/Button.svelte';
+	import { createTimer } from '$lib/clock.svelte';
 
 	let { interval, onDone, onEnd }: { interval: number; onDone: () => void; onEnd: () => void } =
 		$props();
@@ -14,11 +15,23 @@
 	const TOTAL = 120;
 	const SMALL = 0.4;
 
-	let idx = $state(0);
-	let totalElapsed = $state(0);
-	let secLeft = $state(untrack(() => interval));
+	// Phase timer: runs the full protocol, then completes. Started in onMount (not an
+	// $effect) so the timer's imperative state writes don't run inside effect tracking.
+	const timer = createTimer({ durationMs: TOTAL * 1000, pollMs: 200, onComplete: () => onDone() });
+
 	let scale = $state(SMALL);
 	let dur = $state(0);
+
+	onMount(() => {
+		timer.start();
+		return () => timer.stop();
+	});
+
+	// Everything is derived from elapsed time, so behaviour is correct no matter how the
+	// clock advances (a single large jump under test still lands on the right phase).
+	let elapsed = $derived(timer.elapsedMs / 1000);
+	let idx = $derived(Math.floor(elapsed / interval) % 4);
+	let secLeft = $derived(Math.max(1, Math.ceil(interval - (elapsed % interval))));
 
 	// Drive the square's expand/contract via a CSS transition keyed to the phase.
 	function applyPhase(i: number) {
@@ -38,33 +51,10 @@
 	}
 
 	$effect(() => {
-		// Derive everything from a real timestamp rather than counting ticks, so
-		// behaviour is correct no matter how the clock advances (e.g. a single
-		// large jump under test still lands on the right phase / completion).
-		const start = Date.now();
-		let prevIdx = -1;
-		const tick = () => {
-			const elapsed = (Date.now() - start) / 1000;
-			if (elapsed >= TOTAL) {
-				totalElapsed = TOTAL;
-				onDone();
-				return;
-			}
-			totalElapsed = elapsed;
-			const i = Math.floor(elapsed / interval) % 4;
-			if (i !== prevIdx) {
-				prevIdx = i;
-				idx = i;
-				applyPhase(i);
-			}
-			secLeft = Math.max(1, Math.ceil(interval - (elapsed % interval)));
-		};
-		tick();
-		const id = setInterval(tick, 200);
-		return () => clearInterval(id);
+		applyPhase(idx);
 	});
 
-	let remain = $derived(Math.max(0, TOTAL - totalElapsed));
+	let remain = $derived(Math.max(0, TOTAL - elapsed));
 	let mm = $derived(Math.floor(remain / 60));
 	let ss = $derived(String(Math.floor(remain % 60)).padStart(2, '0'));
 	let ph = $derived(PHASES[idx]);

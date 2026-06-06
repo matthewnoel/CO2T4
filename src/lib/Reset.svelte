@@ -1,26 +1,23 @@
 <script>
+	import { onMount } from 'svelte';
+	import { createTimer } from '$lib/clock.svelte';
+
 	let { sub = 'Rest before the next step.', onDone, onSkip } = $props();
 
 	const DUR = 8;
 	const R = 68;
 	const CIRC = 2 * Math.PI * R;
 
-	let left = $state(DUR);
+	// Countdown: auto-completes after DUR seconds of rest. Started in onMount (not an
+	// $effect) so the timer's imperative state writes don't run inside effect tracking.
+	const timer = createTimer({ durationMs: DUR * 1000, pollMs: 60, onComplete: () => onDone() });
 
-	$effect(() => {
-		const start = Date.now();
-		const id = setInterval(() => {
-			const elapsed = (Date.now() - start) / 1000;
-			const remaining = Math.max(0, DUR - elapsed);
-			left = remaining;
-			if (remaining <= 0) {
-				clearInterval(id);
-				onDone();
-			}
-		}, 60);
-		return () => clearInterval(id);
+	onMount(() => {
+		timer.start();
+		return () => timer.stop();
 	});
 
+	let left = $derived(Math.max(0, DUR - timer.elapsedMs / 1000));
 	let prog = $derived((DUR - left) / DUR);
 </script>
 

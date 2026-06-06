@@ -1,25 +1,20 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 	import Button from '$lib/Button.svelte';
+	import { exhaleToInterval, MIN_INTERVAL_S, MAX_INTERVAL_S } from '$lib/calibration';
 
 	let { milliseconds, onStart }: { milliseconds: number; onStart: (secs: number) => void } =
 		$props();
 
-	const ONE_SECOND = 1;
-	const TWENTY_SECONDS = 20;
-	const MIN_BREATH = ONE_SECOND;
-	const MAX_BREATH = TWENTY_SECONDS;
-
-	let secs = $state(
-		untrack(() => Math.max(MIN_BREATH, Math.min(MAX_BREATH, Math.round(milliseconds / 6000))))
-	);
+	// Seed the interval from the measured exhale once; the +/- buttons then own it.
+	let secs = $state(untrack(() => exhaleToInterval(milliseconds)));
 
 	function dec() {
-		if (secs > MIN_BREATH) secs -= 1;
+		if (secs > MIN_INTERVAL_S) secs -= 1;
 	}
 
 	function inc() {
-		if (secs < MAX_BREATH) secs += 1;
+		if (secs < MAX_INTERVAL_S) secs += 1;
 	}
 
 	let exhaleSecs = $derived((milliseconds / 1000).toFixed(1));
@@ -35,14 +30,14 @@
 	</div>
 
 	<div class="stepper">
-		<button class="round" aria-label="Decrease interval" onclick={dec} disabled={secs <= MIN_BREATH}
+		<button class="round" aria-label="Decrease interval" onclick={dec} disabled={secs <= MIN_INTERVAL_S}
 			>–</button
 		>
 		<div class="value-wrap">
 			<div class="value" data-testid="interval">{secs}</div>
 			<span class="mono unit">seconds</span>
 		</div>
-		<button class="round" aria-label="Increase interval" onclick={inc} disabled={secs >= MAX_BREATH}
+		<button class="round" aria-label="Increase interval" onclick={inc} disabled={secs >= MAX_INTERVAL_S}
 			>+</button
 		>
 	</div>

@@ -1,66 +1,46 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
 	import Icon from '$lib/Icon.svelte';
+	import { createTimer } from '$lib/clock.svelte';
+	import { isValidExhale } from '$lib/calibration';
 
 	let { onResult }: { onResult: (ms: number) => void } = $props();
 
-	const SIX_SECONDS = 6000;
-	const ONE_HUNDRED_TWENTY_SECONDS = 120000;
-	const MIN_BREATH = SIX_SECONDS;
-	const MAX_BREATH = ONE_HUNDRED_TWENTY_SECONDS;
-
-	let running = $state(false);
-	let ms = $state(0);
-	let startTime = 0;
-	let raf = 0;
-
-	function loop() {
-		ms = Date.now() - startTime;
-		raf = requestAnimationFrame(loop);
-	}
+	// Stopwatch: count up from the moment the breath starts.
+	const timer = createTimer({ pollMs: 100 });
 
 	function start() {
-		startTime = Date.now();
-		ms = 0;
-		running = true;
-		raf = requestAnimationFrame(loop);
+		timer.start();
 	}
 
 	function stop() {
-		running = false;
-		if (raf) cancelAnimationFrame(raf);
-		const exhale = Date.now() - startTime;
-		// Reject implausible exhales (too short / too long) and reset to the start state.
-		if (exhale < MIN_BREATH || exhale > MAX_BREATH) {
-			ms = 0;
-			return;
-		}
+		const exhale = timer.stop();
+		// Reject implausible exhales (too short / too long); the start state returns on its own.
+		if (!isValidExhale(exhale)) return;
 		onResult(exhale);
 	}
 
-	$effect(() => () => {
-		if (raf) cancelAnimationFrame(raf);
-	});
+	$effect(() => () => timer.stop());
 
-	let secs = $derived(ms / 1000);
+	let secs = $derived(timer.elapsedMs / 1000);
 </script>
 
 <div class="col between exhale">
 	<div class="head">
 		<span class="mono step">Step 01 · Exhale test</span>
-		<h2>{running ? 'Exhale as slowly as you can' : 'Measure your slowest exhale'}</h2>
+		<h2>{timer.running ? 'Exhale as slowly as you can' : 'Measure your slowest exhale'}</h2>
 	</div>
 
 	<div class="meter">
-		<div class="ring" class:running>
-			{#if running}
+		<div class="ring" class:running={timer.running}>
+			{#if timer.running}
 				<span class="time">{secs.toFixed(1)}<span class="unit">s</span></span>
 			{:else}
 				<Icon name="nose" size={42} stroke="var(--muted)" sw={1.6} />
 			{/if}
 		</div>
 		<p class="guide">
-			{#if running}
+			{#if timer.running}
 				Tap <strong>Stop</strong> the moment you run out of air. Don’t hold your breath.
 			{:else}
 				Inhale completely through your nose. Then start the timer and let the air out as slowly as
@@ -72,10 +52,10 @@
 	<Button
 		full
 		size="lg"
-		variant={running ? 'secondary' : 'primary'}
-		onclick={running ? stop : start}
+		variant={timer.running ? 'secondary' : 'primary'}
+		onclick={timer.running ? stop : start}
 	>
-		{running ? 'Stop' : 'Start'}
+		{timer.running ? 'Stop' : 'Start'}
 	</Button>
 </div>
 

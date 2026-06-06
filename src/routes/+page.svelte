@@ -9,98 +9,68 @@
 	import Wordmark from '$lib/Wordmark.svelte';
 	import Pips from '$lib/Pips.svelte';
 	import Icon from '$lib/Icon.svelte';
+	import { createSession, PIP_TOTAL } from '$lib/session.svelte';
 
-	type Step = 'warning' | 'rest1' | 'exhale' | 'rest2' | 'calibrate' | 'breathe' | 'done';
-
-	// Progress-pip index for each step (the final "done" screen reuses breathe's).
-	const PIP: Record<Step, number> = {
-		warning: 0,
-		rest1: 1,
-		exhale: 2,
-		rest2: 3,
-		calibrate: 4,
-		breathe: 5,
-		done: 5
-	};
-
-	let step = $state<Step>('warning');
-	let hist = $state<Step[]>([]);
-	let exhaleMs = $state(12400);
-	let interval = $state(4);
-
-	function go(next: Step) {
-		hist = [...hist, step];
-		step = next;
-	}
-
-	function back() {
-		if (!hist.length) return;
-		const h = [...hist];
-		step = h.pop() as Step;
-		hist = h;
-	}
-
-	function reset() {
-		hist = [];
-		step = 'warning';
-	}
-
-	let canBack = $derived(hist.length > 0 && step !== 'done');
+	const session = createSession();
 </script>
 
 <div class="app">
 	<header class="appbar">
 		<div class="bar-side">
-			{#if canBack}
-				<button class="icon-btn" aria-label="Back" onclick={back}>
+			{#if session.canBack}
+				<button class="icon-btn" aria-label="Back" onclick={() => session.back()}>
 					<Icon name="back" size={19} />
 				</button>
 			{:else}
 				<Wordmark size={18} />
 			{/if}
 		</div>
-		<Pips total={6} idx={PIP[step]} />
+		<Pips total={PIP_TOTAL} idx={session.pipIndex} />
 		<div class="bar-side right">
 			<ThemeToggle />
 		</div>
 	</header>
 
 	<main class="screen">
-		{#key step}
+		{#key session.current}
 			<div class="co2t4-screen">
-				{#if step === 'warning'}
-					<Warning onAccept={() => go('rest1')} />
-				{:else if step === 'rest1'}
+				{#if session.current === 'warning'}
+					<Warning onAccept={() => session.advance()} />
+				{:else if session.current === 'rest1'}
 					<Reset
 						sub="Settle in for the exhale test."
-						onDone={() => go('exhale')}
-						onSkip={() => go('exhale')}
+						onDone={() => session.advance()}
+						onSkip={() => session.advance()}
 					/>
-				{:else if step === 'exhale'}
+				{:else if session.current === 'exhale'}
 					<ExhaleTest
 						onResult={(value) => {
-							exhaleMs = value;
-							go('rest2');
+							session.exhaleMs = value;
+							session.advance();
 						}}
 					/>
-				{:else if step === 'rest2'}
+				{:else if session.current === 'rest2'}
 					<Reset
 						sub="Recover before you calibrate."
-						onDone={() => go('calibrate')}
-						onSkip={() => go('calibrate')}
+						onDone={() => session.advance()}
+						onSkip={() => session.advance()}
 					/>
-				{:else if step === 'calibrate'}
+				{:else if session.current === 'calibrate'}
 					<TimeConversion
-						milliseconds={exhaleMs}
+						milliseconds={session.exhaleMs}
 						onStart={(value) => {
-							interval = value;
-							go('breathe');
+							session.interval = value;
+							session.advance();
 						}}
 					/>
-				{:else if step === 'breathe'}
-					<BoxBreathing {interval} onDone={() => go('done')} onEnd={() => go('done')} />
+				{:else if session.current === 'breathe'}
+					<BoxBreathing
+						interval={session.interval}
+						onDone={() => session.advance()}
+						onEnd={() => session.advance()}
+					/>
 				{:else}
-					<Done {exhaleMs} {interval} onRestart={reset} />
+					<Done exhaleMs={session.exhaleMs} interval={session.interval} onRestart={() => session.reset()} />
 				{/if}
 			</div>
 		{/key}
