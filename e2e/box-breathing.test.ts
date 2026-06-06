@@ -57,7 +57,7 @@ test.describe('Box breathing', () => {
 		await expect(page.getByText('through your nose')).toBeVisible();
 	});
 
-	test('shows "Great work" after two minutes of total elapsed breathing', async ({ page }) => {
+	test('shows "Great job" after two minutes of total elapsed breathing', async ({ page }) => {
 		await advanceToBoxBreathing(page, 5);
 
 		// 120 seconds total. Fast forwards are run in chunks so every tick callback
@@ -67,7 +67,7 @@ test.describe('Box breathing', () => {
 			await page.clock.fastForward(5000);
 		}
 
-		await expect(page.getByText('Great work')).toBeVisible();
+		await expect(page.getByText('Great job')).toBeVisible();
 		await expect(page.getByText('Inhale')).toHaveCount(0);
 	});
 
@@ -77,6 +77,6 @@ test.describe('Box breathing', () => {
 		await advanceToBoxBreathing(page, 5);
 		// 100 seconds elapsed — comfortably short of completion.
 		await page.clock.fastForward(100000);
-		await expect(page.getByText('Great work')).toHaveCount(0);
+		await expect(page.getByText('Great job')).toHaveCount(0);
 	});
 });

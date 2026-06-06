@@ -49,6 +49,16 @@
 			>
 		</label>
 		<Button full disabled={!ok} onclick={onAccept}>Acknowledge &amp; continue</Button>
+		<div class="meta">
+			<a href="https://github.com/matthewnoel/CO2T4" target="_blank" rel="noreferrer">Source code</a
+			>
+			<span aria-hidden="true">·</span>
+			<a
+				href="https://github.com/matthewnoel/CO2T4/blob/main/third-party-licenses.txt"
+				target="_blank"
+				rel="noreferrer">Third-party licenses</a
+			>
+		</div>
 	</div>
 </div>
 
@@ -186,5 +196,23 @@
 		font-size: 13px;
 		line-height: 1.5;
 		color: var(--muted);
+	}
+
+	.meta {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+		font-size: 11.5px;
+		color: var(--line);
+	}
+
+	.meta a {
+		color: var(--faint);
+		text-decoration: none;
+	}
+
+	.meta a:hover {
+		color: var(--accent);
 	}
 </style>

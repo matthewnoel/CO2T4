@@ -39,7 +39,7 @@ test.describe('Full user flow', () => {
 		for (let i = 0; i < 25; i++) {
 			await page.clock.fastForward(5000);
 		}
-		await expect(page.getByText('Great work')).toBeVisible();
+		await expect(page.getByText('Great job')).toBeVisible();
 	});
 
 	test('staying on the warning screen never renders flow components', async ({ page }) => {
@@ -47,7 +47,7 @@ test.describe('Full user flow', () => {
 		await expect(page.getByText('Breathe normally')).toHaveCount(0);
 		await expect(page.getByRole('button', { name: 'Start' })).toHaveCount(0);
 		await expect(page.getByText('Set your interval')).toHaveCount(0);
-		await expect(page.getByText('Great work')).toHaveCount(0);
+		await expect(page.getByText('Great job')).toHaveCount(0);
 	});
 
 	test('no error fallback is rendered anywhere during the flow', async ({ page }) => {

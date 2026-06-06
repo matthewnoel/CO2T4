@@ -14,7 +14,7 @@
 
 <div class="col center done">
 	<div class="badge"><ElementTile sym="✓" name="Complete" size={64} /></div>
-	<h2>Great work</h2>
+	<h2>Great job</h2>
 	<p class="lede">You completed a full two-minute box-breathing cycle.</p>
 
 	<div class="stats">

@@ -63,7 +63,7 @@ test.describe('Application shell', () => {
 		for (let i = 0; i < 25; i++) {
 			await page.clock.fastForward(5000);
 		}
-		await expect(page.getByText('Great work')).toBeVisible();
+		await expect(page.getByText('Great job')).toBeVisible();
 
 		expect(errors).toEqual([]);
 	});

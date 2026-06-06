@@ -12,7 +12,7 @@ test.describe('Rest step', () => {
 	}) => {
 		await acknowledgeWarning(page);
 		await expect(page.getByText('Breathe normally')).toBeVisible();
-		await expect(page.getByText(/Ideally through your nose\./)).toBeVisible();
+		await expect(page.getByText(/Ideally through the nose\./)).toBeVisible();
 	});
 
 	test('advances to the exhale test after the 8 second rest period', async ({ page }) => {

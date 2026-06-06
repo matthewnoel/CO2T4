@@ -17,6 +17,21 @@ test.describe('Warning screen', () => {
 		await expect(paper).toHaveAttribute('rel', 'noreferrer');
 	});
 
+	test('links to the project source and third-party licenses', async ({ page }) => {
+		const source = page.getByRole('link', { name: /Source code/i });
+		await expect(source).toHaveAttribute('href', 'https://github.com/matthewnoel/CO2T4');
+		await expect(source).toHaveAttribute('target', '_blank');
+		await expect(source).toHaveAttribute('rel', 'noreferrer');
+
+		const licenses = page.getByRole('link', { name: /Third-party licenses/i });
+		await expect(licenses).toHaveAttribute(
+			'href',
+			'https://github.com/matthewnoel/CO2T4/blob/main/third-party-licenses.txt'
+		);
+		await expect(licenses).toHaveAttribute('target', '_blank');
+		await expect(licenses).toHaveAttribute('rel', 'noreferrer');
+	});
+
 	test('renders the medical disclaimer with its required points', async ({ page }) => {
 		await expect(page.getByText('Medical disclaimer')).toBeVisible();
 		await expect(page.getByText('For educational use only. Not medical advice.')).toBeVisible();

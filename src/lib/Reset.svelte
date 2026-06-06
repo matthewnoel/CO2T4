@@ -47,7 +47,7 @@
 	</div>
 
 	<h2>Breathe normally</h2>
-	<p class="sub">{sub} Ideally through your nose.</p>
+	<p class="sub">{sub} Ideally through the nose.</p>
 	<button class="skip mono" onclick={onSkip}>Skip →</button>
 </div>
 
